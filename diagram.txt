@@ -1,0 +1,21 @@
+@startuml
+title Foreign Currency Conversion Ratio
+participant Client
+participant Server
+note right of Server #Aqua
+Listening at port 5555
+end note
+note left of Client
+Send a request
+end note
+Client -[#red]> Server : Request String: \n "USD to EUR, USD to GBP, USD to CAD, USD to JPY"
+Server --[#Blue]> Client : Error if no ',' is \n found in the request string
+Server --[#Blue]> Client : Error if the lenght \n of request string is not right
+Server --[#Blue]> Client : Error if the unrecognized \n Foreign curreny \n included in the request string
+Server -> Client : Success: \n "1.2, 1.8, 0.8, 20"
+note left of Client
+Receive Foreign Currency
+Conversion Ratio
+"1.2, 1.8, 0.8, 20"
+end note
+@enduml
