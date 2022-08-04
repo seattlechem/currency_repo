@@ -11,11 +11,10 @@ def run_client():
         # Socket to talk to server
         print("Connecting to server(receiver) …")
         socket = context.socket(zmq.REQ)
-        # socket.connect("tcp://localhost:5555")
-        socket.connect("tcp://3.93.179.42:5555")
+        socket.connect("tcp://localhost:5555")
 
         # send a message
-        data = "USD to EUR, USD to GBP, USD to CAD, USD to JPY"
+        data = "7"
         socket.send_string(data)
         print("[***] Sent message to server(receiver): ", data)
 

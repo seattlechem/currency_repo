@@ -1,21 +1,71 @@
 @startuml
-title Foreign Currency Conversion Ratio
-participant Client
-participant Server
-note right of Server #Aqua
-Listening at port 5555
-end note
-note left of Client
-Send a request
-end note
-Client -[#red]> Server : Request String: \n "USD to EUR, USD to GBP, USD to CAD, USD to JPY"
-Server --[#Blue]> Client : Error if no ',' is \n found in the request string
-Server --[#Blue]> Client : Error if the lenght \n of request string is not right
-Server --[#Blue]> Client : Error if the unrecognized \n Foreign curreny \n included in the request string
-Server -> Client : Success: \n "1.2, 1.8, 0.8, 20"
-note left of Client
+
+'!include plantuml-ae.iuml
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+skinparam SequenceBoxBackgroundColor AliceBlue
+skinparam ActorBorderColor    SaddleBrown
+
+
+' actor User #SaddleBrown
+participant "Client" as User #white
+participant "Server" as A #white
+participant "Microservice" as B #white
+
+' box "Magic happens here"
+' participant "TaskExecutor" as C << (C,#ADD1B2) Testable >>
+' end box
+
+activate User #Bisque
+User -> A: socket.send()
+activate A #Yellow
+
+A -> A: socket.recv()
+activate User #Beige
+activate A #OrangeRed
+A -> A: decode message ('utf-8')
+
+A --> User: Exception during decoding
+deactivate User
+deactivate A
+
+A -> B: Send processed input string
+activate User #Gainsboro
+activate A #Orchid
+activate B #Brown
+B -> B: Validate input string
+activate B #Thistle
+B --> A: Error occurred during validation
+A --> User: Error msg
+deactivate B
+deactivate A
+deactivate User
+
+B -> B: find exchange rates
+activate B #DarkGray
+B -> A: Return exchagne rates
+deactivate B
+deactivate B
+activate A #OrangeRed
+A -> User: Send exchange rates as string
+deactivate A
+deactivate A
+activate User #DarkGreen
+User -> User: Decode received string
+
+deactivate User
+note left of User
 Receive Foreign Currency
 Conversion Ratio
 "1.2, 1.8, 0.8, 20"
 end note
+
+
+'!include ../../plantuml-styles/ae-copyright-footer.txt
 @enduml
